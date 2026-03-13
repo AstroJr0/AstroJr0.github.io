@@ -4,7 +4,7 @@ window.scrollTo(0, 0);
 
 /* @AUTHER       : AstroJr0 (github.com/AstroJr0)
   Date Created  : 09-12-2025
-  Last Modified : 11-03-2026
+  Last Modified : 13-03-2026
 */
 
 // ─────────────────────────────────────────────
@@ -422,6 +422,17 @@ function initStars() {
 }
 
 let camX = 0, camY = 0, starT = 0;
+
+// ── Mouse presence detection ──
+// Set to true only when an actual mouse movement is detected (not touch).
+// More reliable than matchMedia("pointer: fine") on hybrid devices.
+let hasMouse = false;
+window.addEventListener("mousemove", () => { hasMouse = true; }, { once: true, passive: true });
+
+// ── Mobile star drift config ──
+// Controls how fast the starfield auto-pans on touch/mobile devices (no mouse).
+// Lower = faster drift. Unit: milliseconds per full drift cycle.
+const MOBILE_STAR_DRIFT_DURATION = 18000;
 function drawStars() {
   starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
   starT += 0.012;
@@ -511,8 +522,9 @@ window.addEventListener(
     mouseX = e.clientX;
     mouseY = e.clientY;
 
-    // 2. Custom Orb Position
+    // 2. Custom Orb Position — only active when pointer:fine media matches
     if (cursorOrb) {
+      cursorOrb.style.opacity = "1"; // fade in once mouse moves
       cursorOrb.style.left = mouseX + "px";
       cursorOrb.style.top = mouseY + "px";
       const isInteractive = e.target.closest("a,button,[data-magnetic]");
@@ -566,20 +578,42 @@ window.addEventListener(
   { passive: true },
 );
 
-// Prevent sticking on leave
+// Prevent sticking on leave — also hide orb when mouse exits the window
 document.addEventListener("mouseleave", () => {
   lastMousePosition = { x: 0, y: 0 };
   lastStarPosition = { x: 0, y: 0 };
+  if (cursorOrb) cursorOrb.style.opacity = "0";
+});
+
+document.addEventListener("mouseenter", () => {
+  if (cursorOrb) cursorOrb.style.opacity = "1";
 });
 
 function drawStars() {
   starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
   starT += 0.012;
 
-  const targetX = (mouseX > 0 ? mouseX - window.innerWidth / 2 : 0) * 0.05;
-  const targetY = (mouseY > 0 ? mouseY - window.innerHeight / 2 : 0) * 0.05;
-  camX += (targetX - camX) * 0.1;
-  camY += (targetY - camY) * 0.1;
+  // Mouse present: follow cursor. No mouse (touch/mobile): auto-drift.
+  if (hasMouse) {
+    const targetX = (mouseX > 0 ? mouseX - window.innerWidth / 2 : 0) * 0.05;
+    const targetY = (mouseY > 0 ? mouseY - window.innerHeight / 2 : 0) * 0.05;
+    camX += (targetX - camX) * 0.1;
+    camY += (targetY - camY) * 0.1;
+  } else {
+    // Auto-drift bottom-left to top-right for touch/mobile (no mouse).
+    // Direct per-frame increment — no growing target so no float precision blowup.
+    // Speed derived from MOBILE_STAR_DRIFT_DURATION: lower = faster.
+    const driftSpeed = 60000 / MOBILE_STAR_DRIFT_DURATION;
+    camX += driftSpeed * 0.55;  // rightward (dominant axis)
+    camY -= driftSpeed * 0.28;  // upward (secondary axis)
+
+    // Wrap camX/camY within one tile cycle to prevent float values growing forever.
+    // Stars are rendered with modulo already, so this wrap is seamless and invisible.
+    const wrapX = starCanvas.width  / 15;
+    const wrapY = starCanvas.height / 15;
+    if (camX >  wrapX) camX -= wrapX;
+    if (camY < -wrapY) camY += wrapY;
+  }
 
   for (const s of stars) {
     const alpha = s.base + Math.sin(starT * s.speed + s.phase) * 0.3;
@@ -668,19 +702,19 @@ function launchComet() {
   if (reducedMotion) return;
   const comet = document.createElement("div");
   comet.className = "comet";
-  
-  // Random entry point and path
-  const startY = 5 + Math.random() * 40;
-  const endY = startY + (15 + Math.random() * 20); // Path descends
-  
-  // Calculate angle for tilt (tan inverse of vertical delta / horizontal delta)
-  // Since comet moves 100vw horizontally, we use 100 as the base.
-  const angle = Math.atan2(endY - startY, 100) * (180 / Math.PI);
-  
+
+  // Random vertical start position and descent amount
+  const startY = 5 + Math.random() * 40; // vh
+  const descentVh = 12 + Math.random() * 20; // how far it descends across the screen
+
+  // Calculate the actual angle in pixels so the tail aligns with the path
+  const vertPx = (descentVh / 100) * window.innerHeight;
+  const horizPx = window.innerWidth;
+  const angleDeg = Math.atan2(vertPx, horizPx) * (180 / Math.PI);
+
   comet.style.setProperty("--startY", startY + "vh");
-  comet.style.setProperty("--endY", endY + "vh");
-  comet.style.setProperty("--tilt", (angle + 45) + "deg"); // +45 adjusts the CSS shape's base angle
-  
+  comet.style.setProperty("--tilt", angleDeg + "deg");
+
   document.body.appendChild(comet);
   comet.addEventListener("animationend", () => {
     comet.remove();
@@ -877,7 +911,7 @@ document.getElementById("no-btn").addEventListener("click", () => {
 brandBtn.addEventListener("click", () => {
   brandClicks++;
   brandBtn.textContent =
-    brandClicks >= 5 ? "Bro, Im still a student fr" : "Student Dev !";
+    brandClicks >= 5 ? "Bro, Im still a student fr" : "Student dev !";
 });
 
 // ─────────────────────────────────────────────
@@ -1154,6 +1188,12 @@ mql.addEventListener("change", () => {
   reducedMotion = mql.matches;
 });
 
+// ── Mobile bottom-nav terminal button ──
+// Calls the globally-exposed __termToggle set by the terminal IIFE below.
+document.getElementById("term-toggle-btn-mobile")?.addEventListener("click", () => {
+  window.__termToggle?.();
+});
+
 // ──────────────────────────────────────────────
 //  TERMINAL
 // ──────────────────────────────────────────────
@@ -1354,6 +1394,8 @@ mql.addEventListener("change", () => {
   });
 
   toggleBtn?.addEventListener("click", () => (isOpen ? close() : open()));
+  // Expose toggle for mobile bottom-nav button (can't click a display:none element)
+  window.__termToggle = () => (isOpen ? close() : open());
   window.addEventListener(
     "keydown",
     (e) => {
