@@ -10,7 +10,9 @@ Built with **Vanilla JavaScript** for raw performance,
 and **Lucide** for celestial iconography. 
 No heavy frameworks—just pure code drifting in the vacuum.
 
----
+## Please Read the [CREDITS4MUSIC.md](CREDITS4MUSIC.md), The songs i have used are listed there
+the musics i have used, along with the author and URL.. You may show them supprt
+
 
 > *"It's not just a portfolio; it's a window into the digital nebula."*
 
@@ -20,9 +22,6 @@ No heavy frameworks—just pure code drifting in the vacuum.
 
 ## Harsh Reality
 My laptop specs mentioned are real btw
-
-
-
 
 psstttt.. there are some details~
 ## Easter eggs:
