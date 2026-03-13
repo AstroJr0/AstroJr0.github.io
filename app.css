@@ -3,7 +3,7 @@
 /* 
   @AUTHER       : AstroJr0 (github.com/AstroJr0)
   Date Created  : 09-12-2025
-  Last Modified : 11-03-2026 
+  Last Modified : 13-03-2026 
 */
 :root {
   color-scheme: dark;
@@ -43,10 +43,9 @@ body {
   font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   letter-spacing: -0.01em;
   overflow-x: hidden;
-  cursor: none;
 }
 
-/* star canvas — fixed behind everything */
+
 #starfield {
   position: fixed;
   inset: 0;
@@ -55,15 +54,16 @@ body {
   display: block;
 }
 
-/* cursor trail canvas */
+
 #cursor-trail {
   position: fixed;
   inset: 0;
   z-index: 9998;
   pointer-events: none;
+  display: none; 
 }
 
-/* ── SCAN LINE — sweeps across project cards on hover ── */
+
 .project .scan-line {
   position: absolute;
   top: -4px;
@@ -103,7 +103,7 @@ body {
   }
 }
 
-/* cursor orb */
+
 #cursor-orb {
   position: fixed;
   width: 12px;
@@ -120,8 +120,11 @@ body {
     transform 0.08s ease,
     width 0.15s ease,
     height 0.15s ease,
-    background 0.15s ease;
+    background 0.15s ease,
+    opacity 0.2s ease;
   mix-blend-mode: screen;
+  display: none;       
+  opacity: 0;          
 }
 #cursor-orb.cursor-hover {
   width: 20px;
@@ -132,7 +135,7 @@ body {
     0 0 32px rgba(139, 92, 246, 0.4);
 }
 
-/* nebula glow under cursor */
+
 body::after {
   content: "";
   position: fixed;
@@ -1068,7 +1071,7 @@ a {
 /* comet */
 .comet {
   position: fixed;
-  top: 0;
+  top: var(--startY, 10vh);
   pointer-events: none;
   z-index: 9996;
   width: 4px;
@@ -1076,6 +1079,7 @@ a {
   border-radius: 50%;
   background: #fff;
   box-shadow: 0 0 12px 3px rgba(255, 255, 255, 0.9);
+  rotate: var(--tilt, 12deg); 
   animation: comet-fly 3s linear forwards;
 }
 
@@ -1098,7 +1102,7 @@ a {
 }
 @keyframes comet-fly {
   0% {
-    transform: translate(-100px, 0);
+    transform: translateX(-200px);
     opacity: 0;
   }
   5% {
@@ -1108,12 +1112,122 @@ a {
     opacity: 1;
   }
   100% {
-    transform: translate(calc(100vw + 100px), 40vh);
+    transform: translateX(calc(100vw + 200px));
     opacity: 0;
   }
 }
 
+/* ── REAL MOUSE ONLY — cursor orb, trail, and cursor:none ── */
+@media (pointer: fine) {
+  body {
+    cursor: none;
+  }
+  #cursor-orb {
+    display: block;
+  }
+  #cursor-trail {
+    display: block;
+  }
+  .navlink,
+  .btn,
+  .footlink,
+  .egg-btn,
+  .secret-hint {
+    cursor: none;
+  }
+}
+
+/* ── MOBILE BOTTOM NAV ── */
+.bottom-nav {
+  display: none; 
+}
+
+@media (max-width: 767px) {
+  
+  .topbar .navlink {
+    display: none;
+  }
+  .topbar #term-toggle-btn {
+    display: none;
+  }
+
+  
+  #main {
+    padding-bottom: 72px;
+  }
+
+  
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 35;
+    background: rgba(8, 8, 26, 0.92);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-top: 1px solid rgba(139, 92, 246, 0.2);
+    box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.5);
+    justify-content: space-around;
+    align-items: stretch;
+    padding: 0;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .bottom-nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 10px 4px;
+    background: none;
+    border: none;
+    color: rgba(232, 232, 255, 0.5);
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 160ms ease, background 160ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .bottom-nav-btn:active,
+  .bottom-nav-btn:focus-visible {
+    background: rgba(139, 92, 246, 0.1);
+    color: var(--p);
+  }
+  .bottom-nav-icon {
+    font-size: 16px;
+    line-height: 1;
+    display: block;
+    transition: text-shadow 160ms ease;
+  }
+  .bottom-nav-btn:active .bottom-nav-icon {
+    text-shadow: 0 0 10px rgba(139, 92, 246, 0.8);
+  }
+  .bottom-nav-label {
+    display: block;
+    line-height: 1;
+  }
+  
+  .bottom-nav-btn.term-btn .bottom-nav-icon {
+    font-family: monospace;
+    font-size: 14px;
+    color: var(--c);
+    text-shadow: 0 0 6px rgba(34, 211, 238, 0.5);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  @media (max-width: 767px) {
+    .bottom-nav-btn {
+      transition: none;
+    }
+  }
+}
   [data-reveal] {
     opacity: 1;
     transform: none;
@@ -1143,7 +1257,7 @@ a {
   .egg-btn {
     cursor: pointer;
   }
-}
+
 
 /* ──────────────────────────────────────────────
    TERMINAL
