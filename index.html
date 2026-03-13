@@ -1,24 +1,14 @@
-<!DOCTYPE html>
+<!doctype html>
 <!-- 
   @AUTHER       : AstroJr0 (github.com/AstroJr0)
   Date Created  : 09-12-2025
-  Last Modified : 11-03-2026
+  Last Modified : 13-03-2026
 -->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jayed — AstroJr0</title>
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://astrojr0.github.io/">
-    <meta property="og:title" content="Jayed — AstroJr0">
-    <meta property="og:description" content="A cosmic-themed universe built with intrusive thoughts.">
-    <meta property="og:image" content="https://astrojr0.github.io/assets/favicon.svg" type="image/svg+xml">
-    <!-- IDK why the hell twitter is required -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Jayed — AstroJr0">
-    <meta name="twitter:description" content="A cosmic-themed universe! Built with intrusive thoughts.">
-    <meta name="twitter:image" content="https://astrojr0.github.io/assets/favicon.svg" type="image/svg+xml">
     <link rel="shortcut icon" href="assets/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -135,8 +125,7 @@
             >
               explore projects
             </button>
-            <a class="btn" data-magnetic href="mailto:rehanjayed01@gmail.com"
-              >email me</a
+            <a class="btn" data-magnetic href="/cdn-cgi/l/email-protection#b9cbdcd1d8d7d3d8c0dcdd8988f9ded4d8d0d597dad6d4">email me</a
             >
             <a
               class="btn"
@@ -244,11 +233,7 @@
             </div>
           </div>
           <div class="row">
-            <a
-              class="footlink"
-              data-magnetic
-              href="mailto:rehanjayed01@gmail.com"
-              >rehanjayed01@gmail.com</a
+            <a class="footlink" data-magnetic href="/cdn-cgi/l/email-protection#cdbfa8a5aca3a7acb4a8a9fdfc8daaa0aca4a1e3aea2a0"><span class="__cf_email__" data-cfemail="6416010c050a0e051d01005455240309050d084a070b09">[email&#160;protected]</span></a
             >
             <a
               class="footlink"
@@ -367,7 +352,28 @@
         </div>
       </div>
     </div>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    
+
+    <!-- MOBILE BOTTOM NAV — visible only on <=767px via CSS -->
+    <nav class="bottom-nav" aria-label="Mobile navigation">
+      <button class="bottom-nav-btn" onclick="scrollToId('projects')">
+        <span class="bottom-nav-icon">&#9674;</span>
+        <span class="bottom-nav-label">projects</span>
+      </button>
+      <button class="bottom-nav-btn" onclick="scrollToId('skills')">
+        <span class="bottom-nav-icon">&#11041;</span>
+        <span class="bottom-nav-label">skills</span>
+      </button>
+      <button class="bottom-nav-btn" onclick="scrollToId('hire')">
+        <span class="bottom-nav-icon">&#10022;</span>
+        <span class="bottom-nav-label">hire me?</span>
+      </button>
+      <button class="bottom-nav-btn term-btn" id="term-toggle-btn-mobile" title="terminal">
+        <span class="bottom-nav-icon" style="font-family:monospace">_&gt;</span>
+        <span class="bottom-nav-label">terminal</span>
+      </button>
+    </nav>
+    <script data-cfasync="false" src="https://unpkg.com/lucide@latest"></script>
     <script src="app.js"></script>
     <script src="effects.js"></script>
   </body>
