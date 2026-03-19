@@ -1239,13 +1239,9 @@ document
         '  <span class="tc">summon-blackhole</span>   — <span class="tw">swallows the universe</span>',
       ],
       ["to", ""],
-      [
-        '<span class="tc">show-rare-event</span>       — <span class="tw">swallows the universe, and gives it back</span>',
-      ],
+      ["to", '  <span class="tc">show-rare-event</span>       — <span class="tw">swallows the universe, and gives it back</span>'],
       ["to", ""],
-      [
-        '<span class="tc">launch-chaos</span>          — <span class="tw">the universe isnt worthy to live, so destroy it',
-      ],
+      ["to", '  <span class="tc">launch-chaos</span>          — <span class="tw">the universe isnt worthy to live, so destroy it</span>'],
       ["to", ""],
       [
         "ts",
