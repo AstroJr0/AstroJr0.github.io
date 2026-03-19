@@ -4,7 +4,7 @@ window.scrollTo(0, 0);
 
 /* @AUTHER       : AstroJr0 (github.com/AstroJr0)
   Date Created  : 09-12-2025
-  Last Modified : 13-03-2026
+  Last Modified : 19-03-2026
 */
 
 // ─────────────────────────────────────────────
@@ -117,21 +117,21 @@ const projects = [
     link: "https://github.com/AstroJr0/uvz-auther",
   },
   {
-    title: "Vocaloid",
-    kind: "Vocaloid voicebank",
+    title: "WAFFLE",
+    kind: "CLI-TOOL (Adult Site Filters)",
     description:
-      "A Vocaloid voicebank I created using my own voice samples. It's like giving a microphone to your inner pop star and saying, \"Sing, but make it digital and slightly eerie.\" The result is a unique voice that can hit notes I can't even reach in real life—because who needs vocal range when you have code?",
+      "A python based CLI tool to block adult content from websites. It works just below VPN layer or simply, its a local vpn.",
     tech: [
-      "Vocaloid",
-      "Audio",
-      "Voice Synthesis",
       "Python",
-      "PyTorch",
-      "(UNDER CONSTRUCTION)",
+      "Site-Filtering",
+      "Local VPN",
+      "CLI",
+      "[ UNDER CONSTRUCTION ]",
     ],
-    link: "https://github.com/AstroJr0/vocaloid",
+    link: "https://github.com/AstroJr0/waffle",
   },
 ];
+
 
 const skillGroups = [
   { label: "Code", skills: ["JavaScript", "Python", "C++", "Tauri"] },
@@ -390,21 +390,24 @@ if (glowEl) {
 const starCanvas = document.getElementById("starfield");
 const starCtx = starCanvas.getContext("2d");
 let stars = [];
-let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+let mouseX = window.innerWidth / 2,
+  mouseY = window.innerHeight / 2;
 
 function initStars() {
   starCanvas.width = window.innerWidth;
   starCanvas.height = window.innerHeight;
   stars = [];
   const count = Math.floor((window.innerWidth * window.innerHeight) / 2500); // Slightly more stars
-  
+
   for (let i = 0; i < count; i++) {
-    // Generate a size using an exponential-like distribution 
+    // Generate a size using an exponential-like distribution
     // (Many small stars, fewer medium ones, very few large ones)
     const randomSeed = Math.random();
     let size;
-    if (randomSeed > 0.98) size = Math.random() * 3.5 + 7; // Big stars
-    else if (randomSeed > 0.85) size = Math.random() * 2.2 + 1; // Medium
+    if (randomSeed > 0.98)
+      size = Math.random() * 3.5 + 7; // Big stars
+    else if (randomSeed > 0.85)
+      size = Math.random() * 2.2 + 1; // Medium
     else size = Math.random() * 1 + 0.8; // Tiny
 
     stars.push({
@@ -416,51 +419,22 @@ function initStars() {
       speed: Math.random() * 0.6 + 0.1,
       phase: Math.random() * Math.PI * 2,
       colorType: Math.random(),
-      glow: randomSeed > 0.95 // Only big stars glow
+      glow: randomSeed > 0.95, // Only big stars glow
     });
   }
 }
 
-let camX = 0, camY = 0, starT = 0;
+let camX = 0,
+  camY = 0,
+  starT = 0;
 
-// ── Mouse presence detection ──
-// Set to true only when an actual mouse movement is detected (not touch).
-// More reliable than matchMedia("pointer: fine") on hybrid devices.
-let hasMouse = false;
-window.addEventListener("mousemove", () => { hasMouse = true; }, { once: true, passive: true });
+// ── Mobile detection (matches CSS breakpoint) ──
+const isMobile = window.innerWidth <= 767;
 
 // ── Mobile star drift config ──
-// Controls how fast the starfield auto-pans on touch/mobile devices (no mouse).
-// Lower = faster drift. Unit: milliseconds per full drift cycle.
+// Duration of one full drift cycle in ms. Lower = faster.
 const MOBILE_STAR_DRIFT_DURATION = 18000;
-function drawStars() {
-  starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
-  starT += 0.012;
-  camX += ((mouseX - window.innerWidth / 2) * 0.05 - camX) * 0.1;
-  camY += ((mouseY - window.innerHeight / 2) * 0.05 - camY) * 0.1;
 
-  for (const s of stars) {
-    const alpha = s.base + Math.sin(starT * s.speed + s.phase) * 0.3;
-    let px = (s.x + camX * s.z * 15 + starCanvas.width) % starCanvas.width;
-    let py = (s.y + camY * s.z * 15 + starCanvas.height) % starCanvas.height;
-    
-    starCtx.beginPath();
-    starCtx.arc(px, py, s.r * s.z, 0, Math.PI * 2);
-    
-    if (s.glow) {
-      starCtx.shadowBlur = 10;
-      starCtx.shadowColor = "rgba(255, 255, 255, 0.5)";
-    } else {
-      starCtx.shadowBlur = 0;
-    }
-
-    starCtx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
-    starCtx.fill();
-  }
-  requestAnimationFrame(drawStars);
-}
-
-initStars(); drawStars();
 // --- Sparkle Configuration ---
 const sparkleConfig = {
   starAnimationDuration: 1500,
@@ -513,112 +487,117 @@ const createSparkle = (pos) => {
 // ─────────────────────────────────────────────
 const cursorOrb = document.getElementById("cursor-orb");
 
-window.addEventListener(
-  "pointermove",
-  (e) => {
-    const currentPos = { x: e.clientX, y: e.clientY };
+// Only wire up orb/sparkle/trail logic on desktop — mobile has none of this.
+if (!isMobile) {
+  window.addEventListener(
+    "pointermove",
+    (e) => {
+      // Live check — bail immediately on mobile widths regardless of when listener registered
+      if (window.innerWidth <= 767) return;
 
-    // 1. Update Global State
-    mouseX = e.clientX;
-    mouseY = e.clientY;
+      const currentPos = { x: e.clientX, y: e.clientY };
 
-    // 2. Custom Orb Position — only active when pointer:fine media matches
-    if (cursorOrb) {
-      cursorOrb.style.opacity = "1"; // fade in once mouse moves
-      cursorOrb.style.left = mouseX + "px";
-      cursorOrb.style.top = mouseY + "px";
-      const isInteractive = e.target.closest("a,button,[data-magnetic]");
-      cursorOrb.classList.toggle("cursor-hover", !!isInteractive);
-    }
+      // 1. Update Global State
+      mouseX = e.clientX;
+      mouseY = e.clientY;
 
-    // 3. STICKING FIX: If gap is huge (re-entry), teleport instead of trailing
-    const dist = Math.hypot(
-      currentPos.x - lastMousePosition.x,
-      currentPos.y - lastMousePosition.y,
-    );
-    if (dist > 500) {
+      // 2. Custom Orb Position — only active when pointer:fine media matches
+      if (cursorOrb) {
+        cursorOrb.style.opacity = "1"; // fade in once mouse moves
+        cursorOrb.style.left = mouseX + "px";
+        cursorOrb.style.top = mouseY + "px";
+        const isInteractive = e.target.closest("a,button,[data-magnetic]");
+        cursorOrb.classList.toggle("cursor-hover", !!isInteractive);
+      }
+
+      // 3. STICKING FIX: If gap is huge (re-entry), teleport instead of trailing
+      const dist = Math.hypot(
+        currentPos.x - lastMousePosition.x,
+        currentPos.y - lastMousePosition.y,
+      );
+      if (dist > 500) {
+        lastMousePosition = currentPos;
+        lastStarPosition = currentPos;
+        return;
+      }
+
+      // 4. Handle Glow Trail
+      const quantity = Math.max(
+        Math.floor(dist / sparkleConfig.maximumGlowPointSpacing),
+        1,
+      );
+      for (let i = 0; i < quantity; i++) {
+        const x =
+          lastMousePosition.x +
+          (currentPos.x - lastMousePosition.x) * (i / quantity);
+        const y =
+          lastMousePosition.y +
+          (currentPos.y - lastMousePosition.y) * (i / quantity);
+        createGlowPoint({ x, y });
+      }
+
+      // 5. Handle Sparkle Spawning
+      const timeSinceLast = Date.now() - lastStarTimestamp;
+      const distSinceLast = Math.hypot(
+        currentPos.x - lastStarPosition.x,
+        currentPos.y - lastStarPosition.y,
+      );
+
+      if (
+        distSinceLast >= sparkleConfig.minimumDistanceBetweenStars ||
+        timeSinceLast > sparkleConfig.minimumTimeBetweenStars
+      ) {
+        createSparkle(currentPos);
+        lastStarTimestamp = Date.now();
+        lastStarPosition = currentPos;
+      }
+
       lastMousePosition = currentPos;
-      lastStarPosition = currentPos;
-      return;
-    }
+    },
+    { passive: true },
+  );
 
-    // 4. Handle Glow Trail
-    const quantity = Math.max(
-      Math.floor(dist / sparkleConfig.maximumGlowPointSpacing),
-      1,
-    );
-    for (let i = 0; i < quantity; i++) {
-      const x =
-        lastMousePosition.x +
-        (currentPos.x - lastMousePosition.x) * (i / quantity);
-      const y =
-        lastMousePosition.y +
-        (currentPos.y - lastMousePosition.y) * (i / quantity);
-      createGlowPoint({ x, y });
-    }
+  // Prevent sticking on leave — also hide orb when mouse exits the window
+  document.addEventListener("mouseleave", () => {
+    lastMousePosition = { x: 0, y: 0 };
+    lastStarPosition = { x: 0, y: 0 };
+    if (cursorOrb) cursorOrb.style.opacity = "0";
+  });
 
-    // 5. Handle Sparkle Spawning
-    const timeSinceLast = Date.now() - lastStarTimestamp;
-    const distSinceLast = Math.hypot(
-      currentPos.x - lastStarPosition.x,
-      currentPos.y - lastStarPosition.y,
-    );
-
-    if (
-      distSinceLast >= sparkleConfig.minimumDistanceBetweenStars ||
-      timeSinceLast > sparkleConfig.minimumTimeBetweenStars
-    ) {
-      createSparkle(currentPos);
-      lastStarTimestamp = Date.now();
-      lastStarPosition = currentPos;
-    }
-
-    lastMousePosition = currentPos;
-  },
-  { passive: true },
-);
-
-// Prevent sticking on leave — also hide orb when mouse exits the window
-document.addEventListener("mouseleave", () => {
-  lastMousePosition = { x: 0, y: 0 };
-  lastStarPosition = { x: 0, y: 0 };
-  if (cursorOrb) cursorOrb.style.opacity = "0";
-});
-
-document.addEventListener("mouseenter", () => {
-  if (cursorOrb) cursorOrb.style.opacity = "1";
-});
+  document.addEventListener("mouseenter", () => {
+    if (cursorOrb) cursorOrb.style.opacity = "1";
+  });
+} // end if (!isMobile) — orb/sparkle/trail block
 
 function drawStars() {
   starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
   starT += 0.012;
 
-  // Mouse present: follow cursor. No mouse (touch/mobile): auto-drift.
-  if (hasMouse) {
+  if (window.innerWidth <= 767) {
+    // Mobile: move every star directly — no camera, no drift artifacts.
+    // Stars with higher z (closer) move faster, giving natural parallax.
+    // Each star wraps at canvas edge, so the field scrolls infinitely.
+    const driftSpeed = 60000 / MOBILE_STAR_DRIFT_DURATION;
+    for (const s of stars) {
+      s.x =
+        (s.x + driftSpeed * 0.55 * s.z + starCanvas.width) % starCanvas.width;
+      s.y =
+        (s.y - driftSpeed * 0.28 * s.z + starCanvas.height) % starCanvas.height;
+    }
+  } else {
+    // Desktop: follow cursor via camera
     const targetX = (mouseX > 0 ? mouseX - window.innerWidth / 2 : 0) * 0.05;
     const targetY = (mouseY > 0 ? mouseY - window.innerHeight / 2 : 0) * 0.05;
     camX += (targetX - camX) * 0.1;
     camY += (targetY - camY) * 0.1;
-  } else {
-    // Auto-drift bottom-left to top-right for touch/mobile (no mouse).
-    // Direct per-frame increment — no growing target so no float precision blowup.
-    // Speed derived from MOBILE_STAR_DRIFT_DURATION: lower = faster.
-    const driftSpeed = 60000 / MOBILE_STAR_DRIFT_DURATION;
-    camX += driftSpeed * 0.55;  // rightward (dominant axis)
-    camY -= driftSpeed * 0.28;  // upward (secondary axis)
-
-    // Wrap camX/camY within one tile cycle to prevent float values growing forever.
-    // Stars are rendered with modulo already, so this wrap is seamless and invisible.
-    const wrapX = starCanvas.width  / 15;
-    const wrapY = starCanvas.height / 15;
-    if (camX >  wrapX) camX -= wrapX;
-    if (camY < -wrapY) camY += wrapY;
   }
 
   for (const s of stars) {
     const alpha = s.base + Math.sin(starT * s.speed + s.phase) * 0.3;
-    let px = s.x + camX * s.z * 15;
-    let py = s.y + camY * s.z * 15;
+
+    // Desktop uses cam offset; mobile stars are already moved in-place above
+    let px = window.innerWidth <= 767 ? s.x : s.x + camX * s.z * 15;
+    let py = window.innerWidth <= 767 ? s.y : s.y + camY * s.z * 15;
 
     px = ((px % starCanvas.width) + starCanvas.width) % starCanvas.width;
     py = ((py % starCanvas.height) + starCanvas.height) % starCanvas.height;
@@ -716,10 +695,14 @@ function launchComet() {
   comet.style.setProperty("--tilt", angleDeg + "deg");
 
   document.body.appendChild(comet);
-  comet.addEventListener("animationend", () => {
-    comet.remove();
-    resetIdleTimer();
-  }, { once: true });
+  comet.addEventListener(
+    "animationend",
+    () => {
+      comet.remove();
+      resetIdleTimer();
+    },
+    { once: true },
+  );
 }
 
 window.addEventListener("pointermove", resetIdleTimer, { passive: true });
@@ -1041,26 +1024,27 @@ updateScrollProgress();
 // ─────────────────────────────────────────────
 //  NEBULA POINTER GLOWZ
 // ─────────────────────────────────────────────
-let pointerRaf = 0;
-window.addEventListener(
-  "pointermove",
-  (e) => {
-    if (pointerRaf) return;
-    pointerRaf = requestAnimationFrame(() => {
-      pointerRaf = 0;
-      root.style.setProperty(
-        "--mx",
-        `${Math.round((e.clientX / window.innerWidth) * 1000) / 10}%`,
-      );
-      root.style.setProperty(
-        "--my",
-        `${Math.round((e.clientY / window.innerHeight) * 1000) / 10}%`,
-      );
-    });
-  },
-  { passive: true },
-);
-
+if (!isMobile) {
+  let pointerRaf = 0;
+  window.addEventListener(
+    "pointermove",
+    (e) => {
+      if (pointerRaf) return;
+      pointerRaf = requestAnimationFrame(() => {
+        pointerRaf = 0;
+        root.style.setProperty(
+          "--mx",
+          `${Math.round((e.clientX / window.innerWidth) * 1000) / 10}%`,
+        );
+        root.style.setProperty(
+          "--my",
+          `${Math.round((e.clientY / window.innerHeight) * 1000) / 10}%`,
+        );
+      });
+    },
+    { passive: true },
+  );
+}
 // ─────────────────────────────────────────────
 //  MAGNETIC & TILT EFFECTS
 // ─────────────────────────────────────────────
@@ -1190,9 +1174,11 @@ mql.addEventListener("change", () => {
 
 // ── Mobile bottom-nav terminal button ──
 // Calls the globally-exposed __termToggle set by the terminal IIFE below.
-document.getElementById("term-toggle-btn-mobile")?.addEventListener("click", () => {
-  window.__termToggle?.();
-});
+document
+  .getElementById("term-toggle-btn-mobile")
+  ?.addEventListener("click", () => {
+    window.__termToggle?.();
+  });
 
 // ──────────────────────────────────────────────
 //  TERMINAL
@@ -1254,6 +1240,14 @@ document.getElementById("term-toggle-btn-mobile")?.addEventListener("click", () 
       ],
       ["to", ""],
       [
+        '<span class="tc">show-rare-event</span>       — <span class="tw">swallows the universe, and gives it back</span>',
+      ],
+      ["to", ""],
+      [
+        '<span class="tc">launch-chaos</span>          — <span class="tw">the universe isnt worthy to live, so destroy it',
+      ],
+      ["to", ""],
+      [
         "ts",
         '  tip: type <span class="th">supernova</span> anywhere on the page.',
       ],
@@ -1263,6 +1257,7 @@ document.getElementById("term-toggle-btn-mobile")?.addEventListener("click", () 
       ["th", "  // about jayed"],
       ["to", ""],
       ["to", "  student software developer drifting through code and space."],
+
       ["to", ""],
       [
         "ts",
