@@ -1,12 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap");
 @font-face {
-  font-family : "vcr";
-  src: url('./fonts/vcr.woff') format('woff'),
-       url('./fonts/vcr.woff2') format('woff2'),
-       url('./fonts/vcr.ttf') format('truetype');
+  font-family: "vcr";
+  src:
+    url("./fonts/vcr.woff") format("woff"),
+    url("./fonts/vcr.woff2") format("woff2"),
+    url("./fonts/vcr.ttf") format("truetype");
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -14,7 +17,7 @@
 
 html {
   scroll-padding-top: 80px;
-  font-family: 'Roboto Flex', sans-serif;
+  font-family: "Roboto Flex", sans-serif;
 }
 
 body {
@@ -29,23 +32,40 @@ body {
   --md-sys-shape-corner-medium: 12px;
   --md-sys-shape-corner-large: 16px;
   --md-sys-shape-corner-full: 9999px;
-  
+
   --md-sys-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
   --md-sys-motion-duration-short4: 400ms;
   --md-sys-motion-duration-medium2: 500ms;
 }
 
-.font-headline { font-family: 'Space Grotesk', serif; }
-.font-body { font-family: 'Roboto Flex', sans-serif; }
-.font-label { font-family: 'Sora', sans-serif; }
-.font-display { font-family: 'vcr', serif; }
+.font-headline {
+  font-family: "Space Grotesk", serif;
+}
+.font-body {
+  font-family: "Roboto Flex", sans-serif;
+}
+.font-label {
+  font-family: "Sora", sans-serif;
+}
+.font-display {
+  font-family: "vcr", serif;
+}
 
 body::before {
-  content: '';
+  content: "";
   position: fixed;
   inset: 0;
-  background: radial-gradient(circle at top right, rgba(82, 242, 245, 0.08), transparent 40%),
-              radial-gradient(circle at bottom left, rgba(178, 135, 254, 0.06), transparent 40%);
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(82, 242, 245, 0.08),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at bottom left,
+      rgba(178, 135, 254, 0.06),
+      transparent 40%
+    );
   pointer-events: none;
   z-index: -1;
 }
@@ -54,10 +74,13 @@ body::before {
   background-color: var(--bg, var(--md-sys-color-secondary-container));
   color: var(--color, var(--md-sys-color-on-secondary-container));
   border-radius: var(--md-sys-shape-corner-full);
-  font-family: 'Sora', sans-serif;
+  font-family: "Sora", sans-serif;
   font-weight: 500;
-  transition: background-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
-              box-shadow var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+  transition:
+    background-color var(--md-sys-motion-duration-short4)
+      var(--md-sys-motion-easing-standard),
+    box-shadow var(--md-sys-motion-duration-short4)
+      var(--md-sys-motion-easing-standard);
 }
 .md3-tonal-button:hover {
   background-color: var(--bg-hover, rgba(178, 135, 254, 0.7));
@@ -78,11 +101,12 @@ body::before {
   stroke-dashoffset: 400;
 }
 .headers {
-  font-family: 'Space Grotesk', sans-serif !important;
+  font-family: "Space Grotesk", sans-serif !important;
 }
 .visible .svg-heading-letter {
-  animation: svgDrawStroke 1.2s cubic-bezier(0.16, 1, 0.3, 1) var(--delay) forwards,
-             svgFillText 0.8s ease-in calc(var(--delay) + 1.2s) forwards;
+  animation:
+    svgDrawStroke 1.2s cubic-bezier(0.16, 1, 0.3, 1) var(--delay) forwards,
+    svgFillText 0.8s ease-in calc(var(--delay) + 1.2s) forwards;
 }
 
 .orbit-system {
@@ -118,7 +142,7 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   pointer-events: auto;
   transition: transform 0.2s var(--md-sys-motion-easing-standard);
 }
@@ -135,49 +159,22 @@ body::before {
   transform: translate(-50%, -50%) scale(1.2) !important;
 }
 
-.orbit-icon .arc-loader {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  pointer-events: none;
-  --b: 2.5px;
-  --a: 80deg;
-  width: calc(100% + 18px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: #b287fe;
-  opacity: 0;
-  padding: var(--b);
-  --_g:/var(--b) var(--b) no-repeat
-    radial-gradient(50% 50%,#000 97%,#0000);
-  mask: top var(--_g),
-    calc(50% + 50%*sin(var(--a)))
-    calc(50% - 50%*cos(var(--a))) var(--_g),
-    linear-gradient(#0000 0 0) content-box intersect,
-    conic-gradient(#000 var(--a),#0000 0);
-  z-index: 0;
-  animation: arcLoaderSpin 2.4s linear infinite,
-             arcLoaderFadeIn 0.6s ease forwards;
-}
-
-@keyframes arcLoaderSpin {
-  from { transform: translate(-50%, -50%) rotate(0deg); }
-  to   { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-@keyframes arcLoaderFadeIn {
-  from { opacity: 0; }
-  to   { opacity: 0.45; }
-}
-
 @keyframes ringSpin {
-  from { transform: translate(-50%, -50%) rotate(0deg); }
-  to   { transform: translate(-50%, -50%) rotate(360deg); }
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }
 
 @keyframes iconAntiSpin {
-  from { transform: translate(-50%, -50%) rotate(0deg); }
-  to   { transform: translate(-50%, -50%) rotate(-360deg); }
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(-360deg);
+  }
 }
 
 .cosmic-particle {
@@ -190,75 +187,71 @@ body::before {
 .reveal {
   opacity: 0;
   transform: translateY(40px);
-  transition: opacity 0.7s cubic-bezier(0.2, 0, 0, 1), transform 0.7s cubic-bezier(0.2, 0, 0, 1);
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0, 0, 1),
+    transform 0.7s cubic-bezier(0.2, 0, 0, 1);
 }
 .reveal.visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-html.lenis, html.lenis body { height: auto; }
-.lenis.lenis-smooth { scroll-behavior: auto !important; }
-.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
-.lenis.lenis-stopped { overflow: hidden; }
-.lenis.lenis-smooth iframe { pointer-events: none; }
-
-.wavy-circle {
-  --s: 64px; 
-  width: var(--s); 
-  aspect-ratio: 1;
-  --g:/calc(var(--s)*0.176) calc(var(--s)*0.176) radial-gradient(50% 50%,#000 99%,#0000 101%) no-repeat;
-  mask: calc(50% + var(--s)*0.388) calc(50% + var(--s)*0) var(--g),
-    calc(50% + var(--s)*0.274) calc(50% + var(--s)*0.274) var(--g),
-    calc(50% + var(--s)*0) calc(50% + var(--s)*0.388) var(--g),
-    calc(50% + var(--s)*-0.274) calc(50% + var(--s)*0.274) var(--g),
-    calc(50% + var(--s)*-0.388) calc(50% + var(--s)*0) var(--g),
-    calc(50% + var(--s)*-0.274) calc(50% + var(--s)*-0.274) var(--g),
-    calc(50% + var(--s)*0) calc(50% + var(--s)*-0.388) var(--g),
-    calc(50% + var(--s)*0.274) calc(50% + var(--s)*-0.274) var(--g),
-    radial-gradient(calc(var(--s)*0.413),#000 99%,#0000 101%) subtract,
-    calc(50% + var(--s)*0.419) calc(50% + var(--s)*0.174) var(--g),
-    calc(50% + var(--s)*0.174) calc(50% + var(--s)*0.419) var(--g),
-    calc(50% + var(--s)*-0.174) calc(50% + var(--s)*0.419) var(--g),
-    calc(50% + var(--s)*-0.419) calc(50% + var(--s)*0.174) var(--g),
-    calc(50% + var(--s)*-0.419) calc(50% + var(--s)*-0.174) var(--g),
-    calc(50% + var(--s)*-0.174) calc(50% + var(--s)*-0.419) var(--g),
-    calc(50% + var(--s)*0.174) calc(50% + var(--s)*-0.419) var(--g),
-    calc(50% + var(--s)*0.419) calc(50% + var(--s)*-0.174) var(--g);
-  -webkit-mask: calc(50% + var(--s)*0.388) calc(50% + var(--s)*0) var(--g),
-    calc(50% + var(--s)*0.274) calc(50% + var(--s)*0.274) var(--g),
-    calc(50% + var(--s)*0) calc(50% + var(--s)*0.388) var(--g),
-    calc(50% + var(--s)*-0.274) calc(50% + var(--s)*0.274) var(--g),
-    calc(50% + var(--s)*-0.388) calc(50% + var(--s)*0) var(--g),
-    calc(50% + var(--s)*-0.274) calc(50% + var(--s)*-0.274) var(--g),
-    calc(50% + var(--s)*0) calc(50% + var(--s)*-0.388) var(--g),
-    calc(50% + var(--s)*0.274) calc(50% + var(--s)*-0.274) var(--g),
-    radial-gradient(calc(var(--s)*0.413),#000 99%,#0000 101%) subtract,
-    calc(50% + var(--s)*0.419) calc(50% + var(--s)*0.174) var(--g),
-    calc(50% + var(--s)*0.174) calc(50% + var(--s)*0.419) var(--g),
-    calc(50% + var(--s)*-0.174) calc(50% + var(--s)*0.419) var(--g),
-    calc(50% + var(--s)*-0.419) calc(50% + var(--s)*0.174) var(--g),
-    calc(50% + var(--s)*-0.419) calc(50% + var(--s)*-0.174) var(--g),
-    calc(50% + var(--s)*-0.174) calc(50% + var(--s)*-0.419) var(--g),
-    calc(50% + var(--s)*0.174) calc(50% + var(--s)*-0.419) var(--g),
-    calc(50% + var(--s)*0.419) calc(50% + var(--s)*-0.174) var(--g);
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }
 
 @keyframes particleFloat {
-  0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translateY(-100vh) translateX(30px) scale(0.5); opacity: 0; }
+  0% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(30px) scale(0.5);
+    opacity: 0;
+  }
 }
-@keyframes svgDrawStroke { to { stroke-dashoffset: 0; } }
+@keyframes svgDrawStroke {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
 @keyframes svgFillText {
-  from { fill: transparent; stroke: currentColor; }
-  to { fill: currentColor; stroke: transparent; }
+  from {
+    fill: transparent;
+    stroke: currentColor;
+  }
+  to {
+    fill: currentColor;
+    stroke: transparent;
+  }
 }
 
 @keyframes iconUpright {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(-360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
 }
 
 .group:hover .wavy-circle {
@@ -266,6 +259,10 @@ html.lenis, html.lenis body { height: auto; }
 }
 
 @keyframes spinMask {
-  0% { transform: translate(-50%, -50%) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(360deg); }
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }
