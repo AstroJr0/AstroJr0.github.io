@@ -6,7 +6,6 @@
   }
   window.scrollTo(0, 0);
 
-
   var TIMELINE = [
     {
       title: "Initial Interest & Foundations",
@@ -82,7 +81,7 @@
       color: "#52f2f5",
       tagline: "int* p = nullptr; *p = 69;",
       level: 75,
-      tags: ["Performance", "Systems", "STL"]
+      tags: ["Performance", "Systems", "STL"],
     },
     {
       name: "C",
@@ -90,7 +89,7 @@
       color: "#52f2f5",
       tagline: "while(1) { fork(); }",
       level: 80,
-      tags: ["Kernel", "Pointers"]
+      tags: ["Kernel", "Pointers"],
     },
     {
       name: "TypeScript",
@@ -98,7 +97,7 @@
       color: "#52f2f5",
       tagline: "Any is a sin",
       level: 60,
-      tags: ["Typed", "Frontend"]
+      tags: ["Typed", "Frontend"],
     },
     {
       name: "JavaScript",
@@ -106,7 +105,7 @@
       color: "#52f2f5",
       tagline: "undefined is not a function",
       level: 85,
-      tags: ["DOM", "Async", "ES6"]
+      tags: ["DOM", "Async", "ES6"],
     },
     {
       name: "Python",
@@ -114,19 +113,61 @@
       color: "#b287fe",
       tagline: "import peace",
       level: 90,
-      tags: ["Data", "Scripting", "Automation"]
+      tags: ["Data", "Scripting", "Automation"],
     },
   ];
 
   var ORBIT_ICONS = [
-    { name: "C", icon: "./icons/c.svg", level: 1, speed: 0.7, value: 80 },
-    { name: "C++", icon: "./icons/cpp.svg", level: 1, speed: 1.2, value: 75 },
-    { name: "TypeScript", icon: "./icons/ts.svg", level: 2, speed: 1.1, value: 60 },
-    { name: "JavaScript", icon: "./icons/js.svg", level: 3, speed: 0.9, value: 85 },
-    { name: "Python", icon: "./icons/python.svg", level: 3, speed: 2.8, value: 90 },
-    { name: "NumPy", icon: "./icons/numpy.svg", level: 2, speed: 0.5, value: 70 },
+    {
+      name: "C",
+      icon: "./icons/c.svg",
+      level: 1,
+      speed: 0.7,
+      value: 80,
+    },
+    {
+      name: "C++",
+      icon: "./icons/cpp.svg",
+      level: 1,
+      speed: 1.2,
+      value: 75,
+    },
+    {
+      name: "TypeScript",
+      icon: "./icons/ts.svg",
+      level: 2,
+      speed: 1.1,
+      value: 60,
+    },
+    {
+      name: "JavaScript",
+      icon: "./icons/js.svg",
+      level: 3,
+      speed: 0.9,
+      value: 85,
+    },
+    {
+      name: "Python",
+      icon: "./icons/python.svg",
+      level: 3,
+      speed: 2.8,
+      value: 90,
+    },
+    {
+      name: "NumPy",
+      icon: "./icons/numpy.svg",
+      level: 2,
+      speed: 0.5,
+      value: 70,
+    },
     { name: "Bun", icon: "./icons/bun.svg", level: 3, speed: 0.3, value: 50 },
-    { name: "Tauri", icon: "./icons/tauri.svg", level: 3, speed: 0.4, value: 65 },
+    {
+      name: "Tauri",
+      icon: "./icons/tauri.svg",
+      level: 3,
+      speed: 0.4,
+      value: 65,
+    },
   ];
 
   function renderTimeline() {
@@ -253,10 +294,13 @@
       var tagsHtml = "";
       if (skill.tags && skill.tags.length) {
         tagsHtml = '<div class="flex flex-wrap gap-1 mt-2">';
-        skill.tags.forEach(function(tag) {
-          tagsHtml += '<span class="px-2 py-0.5 bg-tertiary-container/50 rounded text-[10px] font-label text-tertiary">' + escapeHtml(tag) + '</span>';
+        skill.tags.forEach(function (tag) {
+          tagsHtml +=
+            '<span class="px-2 py-0.5 bg-tertiary-container/50 rounded text-[10px] font-label text-tertiary">' +
+            escapeHtml(tag) +
+            "</span>";
         });
-        tagsHtml += '</div>';
+        tagsHtml += "</div>";
       }
 
       html +=
@@ -356,14 +400,6 @@
             '" alt="' +
             escapeHtml(iconData.name) +
             '" />';
-
-
-
-
-          var loaderDiv = document.createElement('div');
-          loaderDiv.className = 'arc-loader';
-          loaderDiv.style.animationDelay = (Math.random() * -2.4).toFixed(2) + 's, 0s';
-          iconElem.appendChild(loaderDiv);
 
           iconWrapper.appendChild(iconElem);
           container.appendChild(iconWrapper);
